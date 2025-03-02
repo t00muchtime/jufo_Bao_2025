@@ -18,8 +18,8 @@ class PlayerA:
 
             return self.x * sum(board[player]) / 64 - self.y * board[player].count(0) / 16 - self.z * m
 
-    def total_stat_val(self, game):
-        return self.stat_value(game, 0) - self.stat_value(game, 1)
+    def total_stat_val(self, node):
+        return self.stat_value(node, 0) - self.stat_value(node, 1)
 
     def val_depth(self, game, depth):
         player = (-1) ** game.player_turn
