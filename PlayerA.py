@@ -1,28 +1,30 @@
+import math
+
 
 class PlayerA:
     def __init__(self, x, y, z, depth):
         self.x, self.y, self.z = x, y, z
         self.depth = depth
 
-    def value(self, game, player):
-        board = game.board
-        if game.win(player ^ 1):
-            return -(self.x+self.y+self.z)
+    def stat_value(self, node, player):
+        board = node.board
+        if node.winner == player:
+            return math.inf
         else:
             m = 0
             for i in board[player][8:15]:
                 if i > 2:
                     m += (i / sum(board[player])) ** 2
 
-            return self.x*sum(board[player])/64 - self.y*board[player].count(0)/16 - self.z*m
+            return self.x * sum(board[player]) / 64 - self.y * board[player].count(0) / 16 - self.z * m
 
-    def total_val(self, game):
-        return self.value(game, 0)-self.value(game, 1)
+    def total_stat_val(self, node):
+        return self.stat_value(node, 0) - self.stat_value(node, 1)
 
     def val_depth(self, game, depth):
         player = (-1) ** game.player_turn
         if depth == 0:
-            return player*self.total_val(game)
+            return player * self.total_stat_val(game)
         max_value = -10
         for pit in range(16):
             if game.board[game.player_turn][pit] > 1:
