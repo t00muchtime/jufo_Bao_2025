@@ -4,6 +4,7 @@ class GameState:
         self.current_player = current_player
         self.moves = self.list_moves()
         self.is_terminal = self.moves == []
+        # self.children = []
 
     def list_moves(self):
         moves = []
@@ -14,3 +15,30 @@ class GameState:
         for i in range(16):
             if self.board[self.current_player][i] > 1:
                 moves.append(i)
+
+    def generate_child(self, pit):
+        board = [self.board[0][:], self.board[1][:]]
+
+        hand = board[self.current_player][pit]
+        board[self.current_player][pit] = 0
+        pit = (pit + 1) % 16
+        while hand > 1:
+            while hand > 1:
+                board[self.current_player][pit] += 1
+                hand -= 1
+                pit = (pit + 1) % 16
+            # letzte Bohne
+            # Aufnehmen
+            if board[self.current_player][pit] > 0:
+                hand += board[self.current_player][pit]
+                board[self.current_player][pit] = 0
+                # Pluendern
+                if pit > 7:
+                    hand += board[self.current_player ^ 1][23 - pit]
+                    board[self.current_player ^ 1][23 - pit] = 0
+                pit = (pit + 1) % 16
+            else:
+                board[self.current_player][pit] += 1
+                hand -= 1
+
+        return GameState(board, self.current_player ^ 1)
