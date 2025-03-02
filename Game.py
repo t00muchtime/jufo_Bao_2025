@@ -15,11 +15,11 @@ class Game:
             if self.player_turn == 0:
                 print("mulde: " + str(player_0.best_move(self)))
                 self.move(player_0.best_move(self))
-                print(player_0.total_val(self))
+                print(player_0.total_stat_val(self))
             else:
                 print("mulde: " + str(player_1.best_move(self)))
                 self.move(player_1.best_move(self))
-                print(player_1.total_val(self))
+                print(player_1.total_stat_val(self))
 
             game_running = not (self.win(self.player_turn) or self.board in self.move_history)
 
