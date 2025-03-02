@@ -2,19 +2,26 @@ class GameState:
     def __init__(self, board, current_player):
         self.board = board
         self.current_player = current_player
+        self.winner = self.is_game_over()
         self.moves = self.list_moves()
-        self.is_terminal = self.moves == []
         # self.children = []
 
     def list_moves(self):
         moves = []
+        if self.winner is None:
+            for i in range(16):
+                if self.board[self.current_player][i] > 1:
+                    moves.append(i)
+        return moves
+
+    def is_game_over(self):
         if (not any(x > 0 for x in self.board[self.current_player][8:16])
-                or not any(x > 0 for x in self.board[self.current_player ^ 1][8:16])
+                or not any(x > 1 for x in self.board[self.current_player])):
+            return self.current_player ^ 1
+        if (not any(x > 0 for x in self.board[self.current_player ^ 1][8:16])
                 or not any(x > 1 for x in self.board[self.current_player ^ 1])):
-            return moves
-        for i in range(16):
-            if self.board[self.current_player][i] > 1:
-                moves.append(i)
+            return self.current_player
+        return None
 
     def generate_child(self, pit):
         board = [self.board[0][:], self.board[1][:]]
