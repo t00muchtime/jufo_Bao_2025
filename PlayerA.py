@@ -22,9 +22,8 @@ class PlayerA:
         return self.stat_value(node, 0) - self.stat_value(node, 1)
 
     def negamax(self, node, depth):
-        player = (-1) ** node.current_player
         if depth == 0 or node.winner is not None:
-            return player * self.total_stat_val(node)
+            return (-1) ** node.current_player * self.total_stat_val(node)
 
         max_value = -math.inf
         for move in node.moves:
@@ -36,8 +35,43 @@ class PlayerA:
             max_value = max(val, max_value)
         return max_value
 
+    def minimax(self, node, depth, alpha=-math.inf, beta=math.inf):
+        if depth == 0 or node.winner is not None:
+            return self.total_stat_val(node)
+
+        if node.current_player == 0:
+            max_value = -math.inf
+            for move in node.moves:
+                try:
+                    child = node.generate_child(move)  # if this results in a loop: skip rest
+                except:
+                    continue
+                val = self.minimax(child, depth - 1, alpha, beta)
+                max_value = max(val, max_value)
+                alpha = max(val, alpha)
+                if beta <= alpha:
+                    break
+            return max_value
+
+        if node.current_player == 1:
+            min_value = math.inf
+            for move in node.moves:
+                try:
+                    child = node.generate_child(move)  # if this results in a loop: skip rest
+                except:
+                    continue
+                val = self.minimax(child, depth - 1, alpha, beta)
+                min_value = min(val, min_value)
+                beta = min(val, beta)
+                if beta <= alpha:
+                    break
+            return min_value
+
     def total_val(self, node):
         return (-1) ** node.current_player * self.negamax(node, self.depth)
+
+    def total_val_mm(self, node):
+        self.minimax(node, self.depth)
 
     def best_move(self, node):
         depth = self.depth
@@ -53,3 +87,34 @@ class PlayerA:
                 max_value = val
                 max_move = move
         return max_move
+
+    def best_move_mm(self, node):
+        depth = self.depth
+        if depth == 0 or node.winner is not None:
+            return
+
+        best_move = 0
+        if node.current_player == 0:
+            max_value = -math.inf
+            for move in node.moves:
+                try:
+                    child = node.generate_child(move)  # if this results in a loop: skip rest
+                except:
+                    continue
+                val = self.minimax(child, depth - 1)
+                if val > max_value:
+                    max_value = val
+                    best_move = move
+
+        if node.current_player == 1:
+            min_value = math.inf
+            for move in node.moves:
+                try:
+                    child = node.generate_child(move)  # if this results in a loop: skip rest
+                except:
+                    continue
+                val = self.minimax(child, depth - 1)
+                if val < min_value:
+                    min_value = val
+                    best_move = move
+        return best_move
