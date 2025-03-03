@@ -21,29 +21,30 @@ class PlayerA:
     def total_stat_val(self, node):
         return self.stat_value(node, 0) - self.stat_value(node, 1)
 
-    def val_depth(self, game, depth):
-        player = (-1) ** game.player_turn
-        if depth == 0:
-            return player * self.total_stat_val(game)
-        max_value = -10
-        for pit in range(16):
-            if game.board[game.player_turn][pit] > 1:
-                game.move(pit)
-                value = -self.val_depth(game, depth - 1)
-                game.go_back()
-                if value > max_value:
-                    max_value = value
-        return max_value
+    def negamax(self, node, depth):
+        player = (-1) ** node.current_player
+        if depth == 0 or node.winner is not None:
+            return player * self.total_stat_val(node)
 
-    def best_move(self, spiel):
-        max_val = -10
-        max_pit = 0
-        for pit in range(16):
-            if spiel.board[spiel.player_turn][pit] > 1:
-                spiel.move(pit)
-                value = -self.val_depth(spiel, self.depth - 1)
-                spiel.go_back()
-                if value > max_val:
-                    max_val = value
-                    max_pit = pit
-        return max_pit
+        max_value = -math.inf
+        for move in node.moves:
+            child = node.generate_child(move)
+            val = -self.negamax(child, depth - 1)
+            max_value = max(val, max_value)
+
+    def total_val(self, node, depth):
+        return (-1) ** node.current_player * self.negamax(node, depth)
+
+    def best_move(self, node, depth):
+        if depth == 0 or node.winner is not None:
+            return
+
+        max_value = -math.inf
+        max_move = 0
+        for move in node.moves:
+            child = node.generate_child(move)
+            val = -self.negamax(child, depth - 1)
+            if val >= max_value:
+                max_value = val
+                max_move = move
+        return max_move
