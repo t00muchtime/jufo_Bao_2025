@@ -71,7 +71,7 @@ class PlayerA:
         return (-1) ** node.current_player * self.negamax(node, self.depth)
 
     def total_val_mm(self, node):
-        self.minimax(node, self.depth)
+        return self.minimax(node, self.depth)
 
     def best_move(self, node):
         depth = self.depth
@@ -79,21 +79,22 @@ class PlayerA:
             return
 
         max_value = -math.inf
-        max_move = 0
         for move in node.moves:
-            child = node.generate_child(move)
+            try:
+                child = node.generate_child(move)  # if this results in a loop: skip rest
+            except:
+                continue
             val = -self.negamax(child, depth - 1)
             if val >= max_value:
                 max_value = val
-                max_move = move
-        return max_move
+                best_move = move
+        return best_move
 
     def best_move_mm(self, node):
         depth = self.depth
         if depth == 0 or node.winner is not None:
             return
 
-        best_move = 0
         if node.current_player == 0:
             max_value = -math.inf
             for move in node.moves:
@@ -102,11 +103,11 @@ class PlayerA:
                 except:
                     continue
                 val = self.minimax(child, depth - 1)
-                if val > max_value:
+                if val >= max_value:
                     max_value = val
                     best_move = move
 
-        if node.current_player == 1:
+        else:
             min_value = math.inf
             for move in node.moves:
                 try:
@@ -114,7 +115,7 @@ class PlayerA:
                 except:
                     continue
                 val = self.minimax(child, depth - 1)
-                if val < min_value:
+                if val <= min_value:
                     min_value = val
                     best_move = move
         return best_move
