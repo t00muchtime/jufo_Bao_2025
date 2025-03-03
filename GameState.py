@@ -29,7 +29,9 @@ class GameState:
         hand = board[self.current_player][pit]
         board[self.current_player][pit] = 0
         pit = (pit + 1) % 16
+        n = 0
         while hand > 1:
+            n += 1
             while hand > 1:
                 board[self.current_player][pit] += 1
                 hand -= 1
@@ -47,5 +49,7 @@ class GameState:
             else:
                 board[self.current_player][pit] += 1
                 hand -= 1
+            if n > 1000:
+                raise Exception("endloser Zug")
 
         return GameState(board, self.current_player ^ 1)

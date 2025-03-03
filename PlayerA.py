@@ -12,7 +12,7 @@ class PlayerA:
             return math.inf
         else:
             m = 0
-            for i in board[player][8:15]:
+            for i in board[player][8:]:
                 if i > 2:
                     m += (i / sum(board[player])) ** 2
 
@@ -28,14 +28,19 @@ class PlayerA:
 
         max_value = -math.inf
         for move in node.moves:
-            child = node.generate_child(move)
+            try:
+                child = node.generate_child(move)  # if this results in a loop: skip rest
+            except:
+                continue
             val = -self.negamax(child, depth - 1)
             max_value = max(val, max_value)
+        return max_value
 
-    def total_val(self, node, depth):
-        return (-1) ** node.current_player * self.negamax(node, depth)
+    def total_val(self, node):
+        return (-1) ** node.current_player * self.negamax(node, self.depth)
 
-    def best_move(self, node, depth):
+    def best_move(self, node):
+        depth = self.depth
         if depth == 0 or node.winner is not None:
             return
 
