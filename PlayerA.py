@@ -31,6 +31,7 @@ class PlayerA:
             child = node.generate_child(move)
             val = -self.negamax(child, depth - 1)
             max_value = max(val, max_value)
+        return max_value
 
     def total_val(self, node):
         return (-1) ** node.current_player * self.negamax(node, self.depth)
