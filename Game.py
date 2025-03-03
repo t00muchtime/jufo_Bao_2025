@@ -12,7 +12,7 @@ class Game:
         self.show_board(self.state.board)
         while self.state.winner is None:
             print("~~~")
-            print(self.players[self.state.current_player].total_val(self.state))
+            # print(self.players[self.state.current_player].total_val(self.state))
             self.state = self.state.generate_child(self.players[self.state.current_player]
                                                    .best_move(self.state))
             self.moves += 1

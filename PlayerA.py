@@ -22,9 +22,8 @@ class PlayerA:
         return self.stat_value(node, 0) - self.stat_value(node, 1)
 
     def negamax(self, node, depth):
-        player = (-1) ** node.current_player
         if depth == 0 or node.winner is not None:
-            return player * self.total_stat_val(node)
+            return (-1) ** node.current_player * self.total_stat_val(node)
 
         max_value = -math.inf
         for move in node.moves:
@@ -45,11 +44,13 @@ class PlayerA:
             return
 
         max_value = -math.inf
-        max_move = 0
         for move in node.moves:
-            child = node.generate_child(move)
+            try:
+                child = node.generate_child(move)  # if this results in a loop: skip rest
+            except:
+                continue
             val = -self.negamax(child, depth - 1)
             if val >= max_value:
                 max_value = val
-                max_move = move
-        return max_move
+                best_move = move
+        return best_move
