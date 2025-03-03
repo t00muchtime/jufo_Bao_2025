@@ -28,7 +28,10 @@ class PlayerA:
 
         max_value = -math.inf
         for move in node.moves:
-            child = node.generate_child(move)
+            try:
+                child = node.generate_child(move)  # if this results in a loop: skip rest
+            except:
+                continue
             val = -self.negamax(child, depth - 1)
             max_value = max(val, max_value)
         return max_value
