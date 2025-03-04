@@ -1,6 +1,9 @@
-Unsere Implementation enthält folgende Klassen:
+Unsere Implementation enthält folgende Dateien:
 
-Game: Implementation des Spielbretts
-PlayerA: Bao-Computer
+Game: Klasse, die ein Spiel abbildet
+GameState: Klasse, die einen Spielzustand abbildet
+PlayerA0: Bao-Computer mit Negamax-Algorithmus (ältere Version)
+PlayerA1: Bao-Computer mit Minimax-Algorithmus
 PlayerB: Spieler mit menschlichem Input
-Test: Klasse, die ein Beispiel für ein Bao-Spiel zwischen zwei Bao-Computern enthält
+Optimierung: Methoden zur Optimierung der Gewichtung der Kriterien bei den Spielern
+Test: zu Test- und Demonstrationszwecken

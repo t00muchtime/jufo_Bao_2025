@@ -3,12 +3,12 @@ import PlayerA1
 import random
 
 
-def optimieren(liste, number_games, factor, depth):
-    for i in range(depth):
-        print(liste)
-        print("runde " + str(i))
-        liste[9] = runde(liste, number_games)
+def optimieren(liste, depth, number_games, factor, number_iterations):
+    for i in range(number_iterations):
+        # print("runde " + str(i))
+        liste[9] = runde(liste, depth, number_games)
         liste = angleichen(liste[9], liste, factor)
+        print(liste)
     return liste
 
 
@@ -18,15 +18,15 @@ def eins_gegen_eins(spieler_0, spieler_1):
     return [game1.state.winner, game1.moves]
 
 
-def runde(liste, number_games):
-    spieler_x = PlayerA1.PlayerA1(liste[0], liste[1], liste[2], 2)
-    spieler_y = PlayerA1.PlayerA1(liste[3], liste[4], liste[5], 2)
-    spieler_z = PlayerA1.PlayerA1(liste[6], liste[7], liste[8], 2)
+def runde(liste, depth, number_games):
+    spieler_x = PlayerA1.PlayerA1(liste[0], liste[1], liste[2], depth)
+    spieler_y = PlayerA1.PlayerA1(liste[3], liste[4], liste[5], depth)
+    spieler_z = PlayerA1.PlayerA1(liste[6], liste[7], liste[8], depth)
 
     score_x = score_y = score_z = [0, 0]
     for i in range(number_games):
-        print(str(i) + "/" + str(number_games))
-        spieler_rand = PlayerA1.PlayerA1(random.random(), random.random(), random.random(), 2)
+        # print(str(i) + "/" + str(number_games))
+        spieler_rand = PlayerA1.PlayerA1(random.random(), random.random(), random.random(), depth)
         score_x = liste_addieren(score_x, vergleich(spieler_x, spieler_rand))
         score_y = liste_addieren(score_y, vergleich(spieler_y, spieler_rand))
         score_z = liste_addieren(score_z, vergleich(spieler_z, spieler_rand))
@@ -35,7 +35,7 @@ def runde(liste, number_games):
     print(score_z)
     siege = {score_x[0], score_y[0], score_z[0]}
     meiste_siege = max(siege)
-    if len(siege) == 3:  # überprüfen
+    if len(siege) == 3:
         if meiste_siege == score_x[0]:
             win = "x"
         elif meiste_siege == score_y[0]:
@@ -54,7 +54,7 @@ def runde(liste, number_games):
                 win = "z"
         else:
             win = liste[9]
-    print(win)
+    # print(win)
     return win
 
 
@@ -75,16 +75,15 @@ def vergleich(spieler_0, spieler_rand):
 
 
 def angleichen(win, liste, factor):
-    match win:
-        case "x":
-            for i in range(6):
-                liste[i + 3] = liste[i + 3] + (liste[i % 3] - liste[i + 3]) * factor
-        case "y":
-            for i in range(6):
-                liste[(i + 6) % 9] = liste[(i + 6) % 9] + (liste[i % 3 + 3] - liste[(i + 6) % 9]) * factor
-        case "z":
-            for i in range(6):
-                liste[i] = liste[i] + (liste[i % 3 + 6] - liste[i]) * factor
+    if win == "x":
+        for i in range(6):
+            liste[i + 3] = liste[i + 3] + (liste[i % 3] - liste[i + 3]) * factor
+    elif win == "y":
+        for i in range(6):
+            liste[(i + 6) % 9] = liste[(i + 6) % 9] + (liste[i % 3 + 3] - liste[(i + 6) % 9]) * factor
+    elif win == "z":
+        for i in range(6):
+            liste[i] = liste[i] + (liste[i % 3 + 6] - liste[i]) * factor
     return liste
 
 

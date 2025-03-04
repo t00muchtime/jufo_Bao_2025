@@ -41,7 +41,7 @@ class GameState:
             if board[self.current_player][pit] > 0:
                 hand += board[self.current_player][pit]
                 board[self.current_player][pit] = 0
-                # Pluendern
+                # Plündern
                 if pit > 7:
                     hand += board[self.current_player ^ 1][23 - pit]
                     board[self.current_player ^ 1][23 - pit] = 0

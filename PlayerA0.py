@@ -1,7 +1,7 @@
 import math
 
 
-class PlayerA:
+class PlayerA0:
     def __init__(self, x, y, z, depth):
         self.x, self.y, self.z = x, y, z
         self.depth = depth
