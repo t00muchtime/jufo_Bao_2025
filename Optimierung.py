@@ -75,16 +75,15 @@ def vergleich(spieler_0, spieler_rand):
 
 
 def angleichen(win, liste, factor):
-    match win:
-        case "x":
-            for i in range(6):
-                liste[i + 3] = liste[i + 3] + (liste[i % 3] - liste[i + 3]) * factor
-        case "y":
-            for i in range(6):
-                liste[(i + 6) % 9] = liste[(i + 6) % 9] + (liste[i % 3 + 3] - liste[(i + 6) % 9]) * factor
-        case "z":
-            for i in range(6):
-                liste[i] = liste[i] + (liste[i % 3 + 6] - liste[i]) * factor
+    if win == "x":
+        for i in range(6):
+            liste[i + 3] = liste[i + 3] + (liste[i % 3] - liste[i + 3]) * factor
+    elif win == "y":
+        for i in range(6):
+            liste[(i + 6) % 9] = liste[(i + 6) % 9] + (liste[i % 3 + 3] - liste[(i + 6) % 9]) * factor
+    elif win == "z":
+        for i in range(6):
+            liste[i] = liste[i] + (liste[i % 3 + 6] - liste[i]) * factor
     return liste
 
 
