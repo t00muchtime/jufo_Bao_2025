@@ -9,18 +9,18 @@ class Game:
         self.players = players
 
     def play(self):
-        self.show_board(self.state.board)
+        # self.show_board(self.state.board)
         while self.state.winner is None:
-            print("~~~")
+            # print("~~~")
             # print(self.players[self.state.current_player].total_val(self.state))
             self.state = self.state.generate_child(self.players[self.state.current_player]
                                                    .best_move(self.state))
             self.moves += 1
-            print("züge: " + str(self.moves))
-            self.show_board(self.state.board)
-            print("~~~")
+            # print("züge: " + str(self.moves))
+            # self.show_board(self.state.board)
+            # print("~~~")
 
-        print("spiel zu ende")
+        # print("spiel zu ende")
 
     def go_back(self):
         self.state = self.move_history.pop()
