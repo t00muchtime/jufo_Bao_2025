@@ -5,7 +5,7 @@ class PlayerB:
 
     def input(self, spiel):
         pit = int(input("Mulde: "))
-        while spiel.board[spiel.player_turn][pit] < 2:
+        while spiel.board[spiel.current_player][pit] < 2:
             pit = int(input("Mulde muss mindestens 2 Bohnen enthalten: "))
         return pit
 
