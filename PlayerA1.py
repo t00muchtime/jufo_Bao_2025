@@ -6,6 +6,20 @@ class PlayerA1:
         self.x, self.y, self.z = x, y, z
         self.depth = depth
 
+    class Cache:
+        def __init__(self):
+            self.table = {}
+
+        def lookup(self, hash_key, depth):
+            if hash_key in self.table:
+                entry = self.table[hash_key]
+                if entry['depth'] >= depth:
+                    return entry['score']
+            return None
+
+        def store(self, hash_key, score, depth):
+            self.table[hash_key] = {'score': score, 'depth': depth}
+
     def stat_value(self, node, player):
         board = node.board
         if node.winner == player:
@@ -21,40 +35,42 @@ class PlayerA1:
     def total_stat_val(self, node):
         return self.stat_value(node, 0) - self.stat_value(node, 1)
 
-    def minimax(self, node, depth, alpha=-math.inf, beta=math.inf):
+    def minimax(self, node, depth, table, alpha=-math.inf, beta=math.inf):
+        hash_key = hash(node)  # !
+        cached = table.lookup(hash_key, depth)
+
+        if cached is not None:
+            return cached
+
         if depth == 0 or node.winner is not None:
             return self.total_stat_val(node)
 
         if node.current_player == 0:
             max_value = -math.inf
             for move in node.moves:
-                try:
-                    child = node.generate_child(move)  # if this results in a loop: skip rest
-                except:
-                    continue
-                val = self.minimax(child, depth - 1, alpha, beta)
+                child = node.generate_child(move)
+                val = self.minimax(child, depth - 1, table, alpha, beta)
                 max_value = max(val, max_value)
                 alpha = max(val, alpha)
                 if beta <= alpha:
                     break
+            table.store(hash_key, max_value, depth)
             return max_value
 
         if node.current_player == 1:
             min_value = math.inf
             for move in node.moves:
-                try:
-                    child = node.generate_child(move)  # if this results in a loop: skip rest
-                except:
-                    continue
-                val = self.minimax(child, depth - 1, alpha, beta)
+                child = node.generate_child(move)
+                val = self.minimax(child, depth - 1, table, alpha, beta)
                 min_value = min(val, min_value)
                 beta = min(val, beta)
                 if beta <= alpha:
                     break
+            table.store(hash_key, min_value, depth)
             return min_value
 
     def total_val(self, node):
-        return self.minimax(node, self.depth)
+        return self.minimax(node, self.depth, self.Cache())
 
     def best_move(self, node):
         depth = self.depth
@@ -64,11 +80,8 @@ class PlayerA1:
         if node.current_player == 0:
             max_value = -math.inf
             for move in node.moves:
-                try:
-                    child = node.generate_child(move)  # if this results in a loop: skip rest
-                except:
-                    continue
-                val = self.minimax(child, depth - 1)
+                child = node.generate_child(move)
+                val = self.minimax(child, depth - 1, self.Cache())
                 if val >= max_value:
                     max_value = val
                     best_move = move
@@ -76,11 +89,8 @@ class PlayerA1:
         else:
             min_value = math.inf
             for move in node.moves:
-                try:
-                    child = node.generate_child(move)  # if this results in a loop: skip rest
-                except:
-                    continue
-                val = self.minimax(child, depth - 1)
+                child = node.generate_child(move)
+                val = self.minimax(child, depth - 1, self.Cache())
                 if val <= min_value:
                     min_value = val
                     best_move = move
