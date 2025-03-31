@@ -49,10 +49,10 @@ class GameState:
             else:
                 board[self.current_player][pit] += 1
                 hand -= 1
-            if n > 1000:
+            if n > 200:
                 if self.is_game_over:
                     break
                 else:
-                    raise Exception("endloser Zug")
+                    n = 0
 
         return GameState(board, self.current_player ^ 1)
