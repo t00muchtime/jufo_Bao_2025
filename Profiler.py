@@ -4,7 +4,7 @@ import pstats
 
 
 with cProfile.Profile() as profile:
-    test = Optimierung.optimieren([1, 0, 0, 0, 1, 0, 0, 0, 1, "x"], 2, 30, 0.2, 15)
+    test = Optimierung.optimieren([1, 0, 0, 0, 1, 0, 0, 0, 1, "x"], 2, 20, 0.2, 15)
     print(test[:3])
     print(test[3:6])
     print(test[6:9])

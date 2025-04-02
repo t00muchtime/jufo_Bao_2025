@@ -1,8 +1,5 @@
 
 class PlayerB:
-    def __init__(self):
-        pass
-
     def input(self, spiel):
         pit = int(input("Mulde: "))
         while spiel.board[spiel.current_player][pit] < 2:
